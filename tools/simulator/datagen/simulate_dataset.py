@@ -5,6 +5,7 @@ import math
 import numpy as np
 import csv
 import os
+import ast
 
 
 def gaussian(N, d):
@@ -155,32 +156,28 @@ def write_output(
             consolidated_csv.writerow(row)
 
 
-def generate(input_dist, sim_output, consolidated_csv, hash_tag, first, size):
+def generate(
+    header, input_dist, sim_output, consolidated_csv, hash_tag, first, size
+):
     """
     Generate simulated data set
-    :param input_dist: The base path for data distribution
+    :param input_dist: The input data distribution
     :param sim_output: The output path for simulated data set
     :param consolidated_csv: The writer for consolidated CSV
     :param hash_tag: The hash tag for this recurring job
     :param first: Flag to indicate whether this is the first recurring job
     :param size: The number of instances to simulate
     """
-    header = None
-    with open(input_dist + ".header") as my_file:
-        for row in csv.reader(my_file, delimiter=","):
-            header = row
-            break
-
     if first:
         h = header.copy()
         h.insert(0, "HT1")
         consolidated_csv.writerow(h)
 
-    mean = np.load(input_dist + ".mean.npy")
-    stdev = np.load(input_dist + ".stdev.npy")
-    covar = np.load(input_dist + ".covar.npy")
-    dep_columns = np.load(input_dist + ".depcols.npy").tolist()
-    int_columns = np.load(input_dist + ".intcols.npy").tolist()
+    mean = np.asarray(ast.literal_eval(input_dist[1]))
+    stdev = np.asarray(ast.literal_eval(input_dist[2]))
+    covar = np.asarray(ast.literal_eval(input_dist[3]))
+    dep_columns = np.asarray(ast.literal_eval(input_dist[4]))
+    int_columns = np.asarray(ast.literal_eval(input_dist[5]))
 
     # separate dependent and independent columns
     ind_columns = []
@@ -229,33 +226,42 @@ def main():
     first = True
 
     # run the generator
-    with open(os.path.join(dist_path, "meta")) as csv_file, open(
+    with open(os.path.join(dist_path, "distributions.csv")) as dist_file, open(
+        os.path.join(dist_path, "header.csv")
+    ) as header_file, open(
         consolidated_output_path, "w", newline="\n"
     ) as consolidated_file:
-        csv_reader = csv.reader(csv_file, delimiter=",")
+        dist_csv = csv.reader(dist_file, delimiter=",")
+        header_csv = csv.reader(header_file, delimiter=",")
+        header = None
+        for line in header_csv:
+            header = line
+            break
+
         consolidated_csv = csv.writer(consolidated_file)
 
         success_count = 0
-        for data in csv_reader:
+        for input_dist in dist_csv:
 
-            if len(data) == 0:
+            if len(input_dist) == 0:
                 continue
 
-            input_dist = os.path.join(dist_path, data[0])
-            sim_output = os.path.join(sim_path, data[0])
-
+            sim_output = os.path.join(sim_path, input_dist[0])
             try:
                 generate(
+                    header,
                     input_dist,
                     sim_output,
                     consolidated_csv,
-                    data[0],
+                    input_dist[0],
                     first,
                     size_per_query,
                 )
                 success_count += 1
             except np.linalg.LinAlgError as e:
-                print("Failed to generate data set for " + data[0] + ".", e)
+                print(
+                    "Failed to generate data set for " + input_dist[0] + ".", e
+                )
             first = False
 
         print("\nSuccessfully simulated " + str(success_count) + " jobs.\n")

@@ -5,6 +5,7 @@ import csv
 import os
 from numpy import std, array, mean, save, cov
 import numpy as np
+import json
 
 
 def group_inputs(
@@ -31,6 +32,7 @@ def group_inputs(
     :type max_groups: int, optional
     :param support_threshold: The minimum support for each group
     :type support_threshold: int, optional
+    :return: list of group data sets, list of group hash values
     """
     with open(input_file) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=",")
@@ -56,7 +58,7 @@ def group_inputs(
             if line_count % 100000 == 0:
                 print(f"Processed {line_count} lines.")
 
-        files = []
+        files, group_hashes = [], []
         for group in group_tuples:
 
             if len(group_tuples[group]) < support_threshold:
@@ -71,17 +73,18 @@ def group_inputs(
                         writer.writerow(tup)
 
                 files.append(file)
+                group_hashes.append(group_hash_tag[group])
                 if len(files) >= max_groups:
                     break
 
             except Exception as ex:
                 print("Failed to write group:" + group, ex)
 
-        return files
+        return files, group_hashes
 
 
 def store_distributions(
-    output_path, data_files, int_columns, int_columns_shifted
+    output_path, data_files, group_hashes, int_columns, int_columns_shifted
 ):
     """
     Gather and collect the distributions from each of the data files separately.
@@ -89,27 +92,33 @@ def store_distributions(
     :type output_path: string
     :param data_files: The list of grouped data sets to compute the distributions on
     :type data_files: list
+    :param group_hashes: The list of hash values used for grouping the data sets
+    :type group_hashes: list
     :param int_columns: The list of integer columns in the input file
     :param int_columns_shifted: The list of integer columns in the output file
     :type int_columns: list
     """
-    for data_file in data_files:
-        file_path = os.path.join(output_path, os.path.basename(data_file))
-        header, mean, stdev, covar, dep_cols = get_distributions(
-            data_file, int_columns
-        )
-        with open(file_path + ".header", "w") as my_file:
-            writer = csv.writer(my_file)
-            writer.writerow(header)
-        save(file_path + ".mean", mean)
-        save(file_path + ".stdev", stdev)
-        save(file_path + ".covar", covar)
-        save(file_path + ".depcols", dep_cols)
-        save(file_path + ".intcols", int_columns_shifted)
-    with open(os.path.join(output_path, "meta"), "w") as meta_file:
-        mwr = csv.writer(meta_file)
-        for data_file in data_files:
-            mwr.writerow([os.path.basename(data_file)])
+    header = None
+    with open(
+        os.path.join(output_path, "distributions.csv"), "w"
+    ) as dist_file:
+        dist_writer = csv.writer(dist_file)
+        for (data_file, group_hash) in zip(data_files, group_hashes):
+            header, mean, stdev, covar, dep_cols = get_distributions(
+                data_file, int_columns
+            )
+            row = [
+                group_hash,
+                mean.tolist(),
+                stdev.tolist(),
+                covar.tolist(),
+                dep_cols.tolist(),
+                int_columns_shifted,
+            ]
+            dist_writer.writerow(row)
+    with open(os.path.join(output_path, "header.csv"), "w") as header_file:
+        header_writer = csv.writer(header_file)
+        header_writer.writerow(header)
 
 
 def get_distributions(data_set, int_columns):
@@ -233,7 +242,7 @@ def main():
 
     if not os.path.exists(extract_path):
         os.mkdir(extract_path)
-    files = group_inputs(
+    files, group_hashes = group_inputs(
         input_file,
         group_key,
         hash_tag,
@@ -246,7 +255,9 @@ def main():
 
     if not os.path.exists(dist_path):
         os.mkdir(dist_path)
-    store_distributions(dist_path, files, int_columns, int_columns_shifted)
+    store_distributions(
+        dist_path, files, group_hashes, int_columns, int_columns_shifted
+    )
     print("Stored job distributions.\n")
 
 

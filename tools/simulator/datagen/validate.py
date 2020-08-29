@@ -2,6 +2,7 @@ import csv
 import os
 import sys
 import numpy as np
+import ast
 
 
 def mv_kullback_leibler_divergence(mean1, mean2, covar1, covar2, dep_columns):
@@ -93,32 +94,32 @@ def main():
     sim_path = sys.argv[2]
 
     # run the generator
-    with open(os.path.join(dist_path, "meta")) as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=",")
+    with open(os.path.join(dist_path, "distributions.csv")) as dist_file:
+        dist_csv = csv.reader(dist_file, delimiter=",")
 
         validate_count = 0
-        for data in csv_reader:
+        for ref_dist in dist_csv:
 
-            if len(data) == 0:
+            if len(ref_dist) == 0:
                 continue
 
-            dist = os.path.join(dist_path, data[0])
-            sim = os.path.join(sim_path, data[0])
+            sim = os.path.join(sim_path, ref_dist[0])
 
             if not os.path.isfile(sim):
                 continue
 
-            mean1 = np.load(dist + ".mean.npy")
-            covar1 = np.load(dist + ".covar.npy")
-            dep_cols = np.load(dist + ".depcols.npy")
-            int_cols = np.load(dist + ".intcols.npy")
+            mean1 = np.asarray(ast.literal_eval(ref_dist[1]))
+            covar1 = np.asarray(ast.literal_eval(ref_dist[3]))
+            dep_cols = np.asarray(ast.literal_eval(ref_dist[4]))
+            int_cols = np.asarray(ast.literal_eval(ref_dist[5]))
+
             mean2, covar2 = get_distributions(sim, int_cols)
 
             try:
                 klb = mv_kullback_leibler_divergence(
                     mean1, mean2, covar1, covar2, dep_cols
                 )
-                print("Data file " + data[0] + ":", klb)
+                print("Group " + ref_dist[0] + ":", klb)
                 validate_count += 1
 
             except Exception as e:

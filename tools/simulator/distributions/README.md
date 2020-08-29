@@ -4,6 +4,19 @@ Distributions:
 There are five sub-directories in this directory, Trace1 to Trace5. Each of those directories contains two sub-directories: training_distributions and testing_distributions, which contain statistical properties of a subset of recurring job pipelines in the _Cosmos big data processing infrastructure at Microsoft_.
 Together, there are distributions for **9,561** recurring job pipelines (5,000 for training and 4,561 for testing).
 
+Each of the distributions directories contains two csv files: distributions.csv and header.csv. The header.csv file contains the names of 15 attributes for each job that we simulate. The format of the distributions.csv files is as follows.
+
+Field Number| Field Description|
+------------|------------------|
+1| primary signature number|
+2| list of mean values for each of the attributes|
+3| list of standard deviation values for each of the attributes|
+4| covariance matrix for the attributes|
+5| list of dependent attributes|
+6| list of attribute numbers with integer types|
+
+Each row in the distributions.csv file correspond to properties of a group of jobs having the same primary signature number in the input dataset.
+
 The ../datagen directory contains scripts to generate simulated traces of arbitrary size from the above distributions. It also contains a script that shows how the distributions were extracted from the original traces.
 
 The following steps describe how to generate the datasets.\
