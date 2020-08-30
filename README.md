@@ -31,6 +31,7 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
 - Rathijit Sen
 - Alekh Jindal
 
+For enquiries, please [contact us](mailto:PeregrineTeam@microsoft.com).
 
 # License
 

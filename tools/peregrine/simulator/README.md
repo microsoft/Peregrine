@@ -16,7 +16,10 @@ future instances of those jobs. AutoToken is computationally light,
 for both training and scoring, is easily deployable at scale, and is
 integrated with the Peregrine workload optimization infrastructure.
 
-This directory includes the following sub-directories.
+[![AutoToken Video](https://img.youtube.com/vi/H61rl_kMHWI/0.jpg)](https://youtu.be/H61rl_kMHWI)
+<br>
+
+**Dataset Simulator.** This directory includes a dataset simulator to reproduce the AutoToken results. It contains the following sub-directories.
 
 Folder|Contents|
 ------|--------|
