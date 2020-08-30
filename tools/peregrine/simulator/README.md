@@ -5,8 +5,8 @@ in serverless environments, is critical for improving infrastructure
 operational efficiency, capacity availability, query performance predictability, 
 and for reducing unnecessary wait times. For more details check the paper:
 
-_AutoToken: Predicting Peak Parallelism for Big Data Analytics at Microsoft, VLDB 2020_<br>
-_Rathijit Sen (Microsoft), Alekh Jindal (Microsoft), Hiren Patel (Microsoft), Shi Qiao (Microsoft)_
+[_AutoToken: Predicting Peak Parallelism for Big Data Analytics at Microsoft_](http://www.vldb.org/pvldb/vol13/p3326-sen.pdf)<br>
+Rathijit Sen, Alekh Jindal, Hiren Patel, Shi Qiao. VLDB 2020.
 
 **AutoToken** is a simple and effective predictor for estimating the peak 
 resource usage of recurring analytical jobs. It uses multiple
