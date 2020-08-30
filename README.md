@@ -1,5 +1,7 @@
 # Peregrine
 
+![Peregrine](peregrine.png)
+
 Peregrine is a workload optimization platform for self-tuning cloud query engines. Please see the peregrine paper for more details:
 
 [_Peregrine: Workload Optimization for Cloud Query Engines_](https://dl.acm.org/doi/10.1145/3357223.3362726).
