@@ -28,3 +28,8 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
 
 - Rathijit Sen
 - Alekh Jindal
+
+
+# License
+
+[MIT License](LICENSE)
