@@ -2,12 +2,12 @@
 
 ![Peregrine](peregrine.png)
 
-Peregrine is a workload optimization platform for self-tuning cloud query engines. Please see the peregrine paper for more details:
+Peregrine is a workload optimization platform for self-tuning cloud query engines. Please see the Peregrine paper for more details:
 
 [_Peregrine: Workload Optimization for Cloud Query Engines_](https://dl.acm.org/doi/10.1145/3357223.3362726).
 Alekh Jindal, Hiren Patel, Abhishek Roy, Shi Qiao, Zhicheng Yin, Rathijit Sen, Subru Krishnan. Symposium on Cloud Computing (SoCC), 2019.
 
-Currently, we are releasing a [dataset simulator](tools/peregrine/simulator/README.md) for resource allocation in close to _9,561_ production big data pipelines.
+Currently, we are releasing a [dataset simulator](tools/peregrine/simulator/README.md) for resource allocation in _9,561_ production big data pipelines.
 Stay tuned for more to come.
 
 
