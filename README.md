@@ -26,10 +26,7 @@ For more information see the [Code of Conduct FAQ](https://opensource.microsoft.
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
 
-# Authors
-
-- Rathijit Sen
-- Alekh Jindal
+# Contact
 
 For enquiries, please [contact us](mailto:PeregrineTeam@microsoft.com).
 
