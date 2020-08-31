@@ -16,16 +16,12 @@ future instances of those jobs. AutoToken is computationally light,
 for both training and scoring, is easily deployable at scale, and is
 integrated with the Peregrine workload optimization infrastructure.
 
-[![AutoToken Video](https://img.youtube.com/vi/H61rl_kMHWI/0.jpg)](https://youtu.be/H61rl_kMHWI)
+[![AutoToken Video](https://img.youtube.com/vi/H61rl_kMHWI/hq1.jpg)](https://youtu.be/H61rl_kMHWI)
 <br>
 
-**Dataset Simulator.** This directory includes a dataset simulator to reproduce the AutoToken results. It contains the following sub-directories.
+**Dataset Simulator.** This directory includes a dataset simulator to synthesize datasets of arbitrary size for AutoToken. It contains the following sub-directories.
 
 Folder|Contents|
 ------|--------|
 [datagen](datagen/README.md)| This contains scripts for analyzing distributions of feature values for an input dataset and generating synthetic datasets of a desired size with similar distributions.|
 [distributions](distributions/README.md)| This contains distributions from which training and testing datasets can be generated for the AutoToken models.|
-
-
-
-
